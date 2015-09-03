@@ -13,20 +13,22 @@ route_prefix(<<"/ws/",P/binary>>) -> route(P);
 route_prefix(<<"/",P/binary>>) -> route(P);
 route_prefix(P) -> route(P).
 
+default() -> login.
+location() -> "apps/*/ebin/*.beam".
+
 route(<<"favicon.ico">>) -> static_file;
-route(Route) -> % Just check that requested module is beam file
-    Exist = lists:foldl(fun(L,A) ->
-        M = filename:basename(L,".beam"),
-        case A of
-            undefined ->
-                case { list_to_binary(M), 
-                       lists:last(filename:split(filename:dirname(L))), 
-                       filename:extension(L) } of
-                     { Route,
-                       "ebin",
-                       ".beam" } -> {ok, M};
-                    _ -> A
-                end;
-            _ -> A
-        end end, undefined, filelib:wildcard("apps/*/ebin/*.beam")),
-    case Exist of {ok, Module} -> list_to_atom(Module); _ -> login end.
+route(Route) -> storage_lookup(Route).
+
+storage_lookup(Route) ->
+    wf:info(?MODULE,"STORAGE",[]),
+    Name=binary_to_list(Route),
+    case lists:any(fun(Path) -> Name=:=filename:basename(Path,".beam") end,
+        filelib:wildcard(location())) of true -> binary_to_atom(Route,latin1);
+            false -> ets_lookup(Route) end.
+
+ets_lookup(Route) ->
+    case ets:info(filesystem) of
+        undefined -> default();
+        _ -> case ets:lookup(filesystem,binary_to_list(Route)++".beam") of
+                [] -> default();
+                _ -> binary_to_atom(Route,latin1) end end.
