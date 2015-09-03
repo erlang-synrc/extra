@@ -20,7 +20,6 @@ route(<<"favicon.ico">>) -> static_file;
 route(Route) -> storage_lookup(Route).
 
 storage_lookup(Route) ->
-    wf:info(?MODULE,"STORAGE",[]),
     Name=binary_to_list(Route),
     case lists:any(fun(Path) -> Name=:=filename:basename(Path,".beam") end,
         filelib:wildcard(location())) of true -> binary_to_atom(Route,latin1);
