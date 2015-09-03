@@ -1,0 +1,9 @@
+{application, extra, [
+    {description,  "N2O XTR"},
+    {vsn,          "0.9"},
+    {applications, [kernel, stdlib]},
+    {modules, []},
+    {registered,   []},
+    {mod, { extra, []}},
+    {env, []}
+]}.
