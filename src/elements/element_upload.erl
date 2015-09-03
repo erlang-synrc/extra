@@ -1,6 +1,7 @@
 -module(element_upload).
 -behaviour(gen_server).
--include_lib("wf.hrl").
+-include("extra.hrl").
+-include_lib("n2o/include/wf.hrl").
 -include_lib("kernel/include/file.hrl").
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 -compile(export_all).

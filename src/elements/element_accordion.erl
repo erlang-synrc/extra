@@ -1,6 +1,6 @@
 -module(element_accordion).
 -compile(export_all).
--include_lib("n2o_bootstrap/include/wf.hrl").
+-include("extra.hrl").
 
 render_element(R=#accordion{})->
     Id = wf:temp_id(),

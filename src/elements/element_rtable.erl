@@ -1,8 +1,6 @@
 -module(element_rtable).
 -compile(export_all).
--include_lib("n2o_bootstrap/include/wf.hrl").
-
-reflect() -> record_info(fields, rtable).
+-include("extra.hrl").
 
 render_element(R = #rtable{rows=Rows}) ->
   Id = case R#rtable.id of [] -> wf:temp_id(); I -> I end,

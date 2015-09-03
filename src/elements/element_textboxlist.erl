@@ -1,8 +1,6 @@
 -module(element_textboxlist).
 -compile(export_all).
--include_lib("n2o_bootstrap/include/wf.hrl").
-
-reflect() -> record_info(fields, textboxlist).
+-include("extra.hrl").
 
 render_element(R = #textboxlist{}) ->
     Id = case R#textboxlist.id of [] -> wf:temp_id(); I -> I end,

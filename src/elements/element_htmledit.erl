@@ -1,7 +1,7 @@
 -module (element_htmledit).
--author('doxtop@synrc.com').
+-author('Andrii Zadorozhnii').
 -compile(export_all).
--include_lib("n2o_bootstrap/include/wf.hrl").
+-include("extra.hrl").
 -include_lib("kernel/include/file.hrl").
 
 render_element(R= #htmlbox{}) ->
@@ -58,7 +58,7 @@ control_event(Cid, {Root, Dir, File, MimeType, Data, ActionHolder, PostWrite, Im
             ThDir = filename:join([Root, Dir, "thumbnail"]),
             [begin
                 Th = filename:join([ThDir, Name++"_"++integer_to_list(X)++"x"++integer_to_list(Y)++Ext]),
-                En = filelib:ensure_dir(Th),
+                _En = filelib:ensure_dir(Th),
                 M:make_thumb(Full, X, Y, Th) end || {X, Y}<- Size],
                 filename:join([ThDir--Root, Name++Ext]) end,
             post_write(Api, Target, Root, Dir, File, MimeType, Thumb) end,

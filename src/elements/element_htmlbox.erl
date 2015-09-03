@@ -1,6 +1,6 @@
 -module (element_htmlbox).
--author('doxtop@synrc.com').
--include_lib("wf.hrl").
+-author('Andrii Zadorozhnii').
+-include("extra.hrl").
 -include_lib("kernel/include/file.hrl").
 -compile(export_all).
 
@@ -17,13 +17,13 @@ render_element(R=#htmlbox{state=S})->
     {<<"class">>, R#htmlbox.class}]).
 
 event({Cid, wire_upload, #upload_state{}=S})->
-  [{cmd, [{name, Name}, {tag, "wire_upload"}]} = Cmd] = wf:q({Cid, <<"detail">>}),
+  [{cmd, [{name, Name}, {tag, "wire_upload"}]}] = wf:q({Cid, <<"detail">>}),
   Uid = wf:temp_id(),
   U = #upload{id = Uid, state=S#upload_state{cid = Uid}},
   ?WS_SEND(Cid, exec, {cmd, [{name, wf:to_binary(Name)}, {arg, wf:to_binary(element_upload:render(U))}]}),
   element_upload:wire(U),
   wf:wire(#event{postback={Cid, complete, Uid}, target=Uid, type=upload_complete, delegate=?MODULE});
-event({Cid, complete, Uid}) ->
+event({_Cid, complete, Uid}) ->
   [{file, File}] = wf:q({Uid, <<"detail">>}),
   ?WS_SEND(Uid, complete_replace, {file, wf:to_binary(File)});
-event(E)-> ok.
+event(_E)-> ok.
